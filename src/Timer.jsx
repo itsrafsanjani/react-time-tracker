@@ -1,64 +1,63 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { TimerActionButton } from './TimerActionButton'
 
-export class Timer extends React.Component {
-  componentDidMount() {
-    this.forceUpdateInterval = setInterval(() => this.forceUpdate(), 50)
+export const Timer = ({
+  timer,
+  onEditClick,
+  onTrashClick,
+  onStartClick,
+  onStopClick,
+}) => {
+  const [, updateState] = useState()
+
+  const forceUpdate = useCallback(() => updateState({}), [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      forceUpdate()
+    }, 1000)
+    return () => clearInterval(interval)
+  })
+
+  const handleStartClick = () => {
+    onStartClick(timer.id)
   }
 
-  // Inside Timer
-  componentWillUnmount() {
-    clearInterval(this.forceUpdateInterval)
+  const handleStopClick = () => {
+    onStopClick(timer.id)
   }
 
-  handleStartClick = () => {
-    this.props.onStartClick(this.props.id)
+  const handleTrashClick = () => {
+    onTrashClick(timer.id)
   }
 
-  handleStopClick = () => {
-    this.props.onStopClick(this.props.id)
-  }
-  // ...
-
-  handleTrashClick = () => {
-    this.props.onTrashClick(this.props.id)
-  }
-
-  render() {
-    const elapsedString = helpers.renderElapsedString(
-      this.props.elapsed,
-      this.props.runningSince
-    )
-    return (
-      <div className="ui centered card">
-        <div className="content">
-          <div className="header">{this.props.title}</div>
-          <div className="meta">{this.props.project}</div>
-          <div className="center aligned description">
-            <h2>{elapsedString}</h2>
-          </div>
-          <div className="extra content">
-            <span
-              className="right floated edit icon"
-              onClick={this.props.onEditClick}
-            >
-              <i className="edit icon" />
-            </span>
-            <span
-              className="right floated trash icon"
-              onClick={this.handleTrashClick}
-            >
-              <i className="trash icon" />
-            </span>
-          </div>
+  const elapsedString = helpers.renderElapsedString(
+    timer.elapsed,
+    timer.runningSince
+  )
+  return (
+    <div className="ui centered card">
+      <div className="content">
+        <div className="header">{timer.title}</div>
+        <div className="meta">{timer.project}</div>
+        <div className="center aligned description">
+          <h2>{elapsedString}</h2>
         </div>
-        {/* At the bottom of `Timer.render()`` */}
-        <TimerActionButton
-          timerIsRunning={!!this.props.runningSince}
-          onStartClick={this.handleStartClick}
-          onStopClick={this.handleStopClick}
-        />
+        <div className="extra content">
+          <span className="right floated edit icon" onClick={onEditClick}>
+            <i className="edit icon" />
+          </span>
+          <span className="right floated trash icon" onClick={handleTrashClick}>
+            <i className="trash icon" />
+          </span>
+        </div>
       </div>
-    )
-  }
+      {/* At the bottom of `Timer.render()`` */}
+      <TimerActionButton
+        timerIsRunning={!!timer.runningSince}
+        onStartClick={handleStartClick}
+        onStopClick={handleStopClick}
+      />
+    </div>
+  )
 }

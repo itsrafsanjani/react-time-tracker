@@ -1,59 +1,57 @@
-import React from 'react';
-import { Timer } from './Timer';
-import { TimerForm } from './TimerForm';
+import React, { useState } from 'react'
+import { Timer } from './Timer'
+import { TimerForm } from './TimerForm'
 
-export class EditableTimer extends React.Component {
-  state = {
-    editFormOpen: false,
+export const EditableTimer = ({
+  timer,
+  onFormSubmit,
+  onTrashClick,
+  onStartClick,
+  onStopClick,
+}) => {
+  const [editFormOpen, setEditFormOpen] = useState(false)
+
+  const handleEditClick = () => {
+    openForm()
   }
 
-  handleEditClick = () => {
-    this.openForm()
+  const handleFormClose = () => {
+    closeForm()
   }
 
-  handleFormClose = () => {
-    this.closeForm()
+  const handleSubmit = (timer) => {
+    onFormSubmit(timer)
+    closeForm()
   }
 
-  handleSubmit = (timer) => {
-    this.props.onFormSubmit(timer)
-    this.closeForm()
+  const closeForm = () => {
+    setEditFormOpen(false)
   }
 
-  closeForm = () => {
-    this.setState({ editFormOpen: false })
+  const openForm = () => {
+    setEditFormOpen(true)
   }
 
-  openForm = () => {
-    this.setState({ editFormOpen: true })
-  }
-
-  render() {
-    if (this.state.editFormOpen) {
-      return (
-        <TimerForm
-          id={this.props.id}
-          title={this.props.title}
-          project={this.props.project}
-          onFormSubmit={this.handleSubmit}
-          onFormClose={this.handleFormClose}
-        />
-      )
-      // Inside EditableTimer
-    } else {
-      return (
-        <Timer
-          id={this.props.id}
-          title={this.props.title}
-          project={this.props.project}
-          elapsed={this.props.elapsed}
-          runningSince={this.props.runningSince}
-          onEditClick={this.handleEditClick}
-          onTrashClick={this.props.onTrashClick}
-          onStartClick={this.props.onStartClick}
-          onStopClick={this.props.onStopClick}
-        />
-      )
-    }
+  if (editFormOpen) {
+    return (
+      <TimerForm
+        id={timer.id}
+        title={timer.title}
+        project={timer.project}
+        onFormSubmit={handleSubmit}
+        onFormClose={handleFormClose}
+      />
+    )
+    // Inside EditableTimer
+  } else {
+    return (
+      <Timer
+        timer={timer}
+        onEditClick={handleEditClick}
+        onTrashClick={onTrashClick}
+        onStartClick={onStartClick}
+        onStopClick={onStopClick}
+      />
+    )
   }
 }

@@ -1,25 +1,27 @@
-import React from 'react';
+import React from 'react'
 
-export class TimerActionButton extends React.Component {
-  render() {
-    if (this.props.timerIsRunning) {
-      return (
-        <div
-          className="ui bottom attached red basic button"
-          onClick={this.props.onStopClick}
-        >
-          Stop
-        </div>
-      )
-    } else {
-      return (
-        <div
-          className="ui bottom attached green basic button"
-          onClick={this.props.onStartClick}
-        >
-          Start
-        </div>
-      )
-    }
+export const TimerActionButton = ({
+  timerIsRunning,
+  onStopClick,
+  onStartClick,
+}) => {
+  if (timerIsRunning) {
+    return (
+      <div
+        className="ui bottom attached red basic button"
+        onClick={onStopClick}
+      >
+        Stop
+      </div>
+    )
+  } else {
+    return (
+      <div
+        className="ui bottom attached green basic button"
+        onClick={onStartClick}
+      >
+        Start
+      </div>
+    )
   }
 }
