@@ -1,7 +1,12 @@
 import React from 'react'
+import { TimersDashboard } from './TimersDashboard'
 
 function App() {
-  return <div className="ui centered header">Hello World</div>
+  return (
+    <div>
+      <TimersDashboard />
+    </div>
+  )
 }
 
 export default App
