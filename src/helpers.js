@@ -1,9 +1,11 @@
+import { v4 as uuidv4 } from "uuid"
+
 window.helpers = (function () {
   function newTimer(attrs = {}) {
     const timer = {
       title: attrs.title || 'Timer',
       project: attrs.project || 'Project',
-      id: Math.ceil(Math.random() * 60 * 60 * 24 * 30 * 12),
+      id: uuidv4(),
       elapsed: 0,
     };
 

@@ -6,24 +6,13 @@ export const TimersDashboard = () => {
   const [timers, setTimers] = useState([])
 
   useEffect(() => {
-    setTimers([
-      {
-        title: 'Practice squat',
-        project: 'Gym Chores',
-        id: '0a4a79cb-b06d-4cb1-883d-549a1e3b66d7',
-        elapsed: 5456099,
-        runningSince: Date.now(),
-      },
-      {
-        title: 'Bake squash',
-        project: 'Kitchen Chores',
-        id: 'a73c1d19-f32d-4aff-b470-cea4e792406a',
-        elapsed: 1273998,
-        runningSince: null,
-      },
-    ])
+    loadTimersFromServer()
+    setInterval(loadTimersFromServer, 5000)
   }, [])
-  
+
+  const loadTimersFromServer = () => {
+    client.getTimers((serverTimers) => setTimers(serverTimers))
+  }
 
   const handleCreateFormSubmit = (timer) => {
     createTimer(timer)
@@ -49,6 +38,8 @@ export const TimersDashboard = () => {
   const createTimer = (timer) => {
     const t = helpers.newTimer(timer)
     setTimers(timers.concat(t))
+
+    client.createTimer(t)
   }
 
   const updateTimer = (attrs) => {
@@ -60,10 +51,14 @@ export const TimersDashboard = () => {
         return timer
       })
     )
+
+    client.updateTimer(attrs)
   }
 
   const deleteTimer = (timerId) => {
     setTimers(timers.filter((t) => t.id !== timerId))
+
+    client.deleteTimer({ id: timerId })
   }
 
   const startTimer = (timerId) => {
@@ -78,6 +73,8 @@ export const TimersDashboard = () => {
         return timer
       })
     )
+
+    client.startTimer({ id: timerId, start: now })
   }
 
   const stopTimer = (timerId) => {
@@ -97,11 +94,13 @@ export const TimersDashboard = () => {
         return timer
       })
     )
+
+    client.stopTimer({ id: timerId, stop: now })
   }
 
   return (
-    <div className="ui three large screen column centered grid">
-      <div className="column">
+    <div className='ui three large screen column centered grid'>
+      <div className='column'>
         {/* Inside TimerDashboard.render() */}
         <EditableTimerList
           timers={timers}
